@@ -1,0 +1,283 @@
+skypro=# SELECT * FROM employee;
+ id | first_name | last_name | gender | age
+----+------------+-----------+--------+-----
+  3 | Eva        | Green     | female |  22
+  1 | Kris       | Los       | female |  18
+(2 строки)
+skypro=# INSERT INTO employee (
+skypro(# first_name, last_name, gender, age)
+skypro-# VALUES ('Lina', 'Zvereva', 'female', 19);
+INSERT 0 1
+skypro=# INSERT INTO employee (
+skypro(# first_name, last_name, gender, age)
+skypro-# VALUES ('Roman', 'Petrov', 'male', 58);
+INSERT 0 1
+skypro=# INSERT INTO employee (
+skypro(# first_name, last_name, gender, age)
+skypro-# VALUES ('leo', 'Dicaprio', 'male', 47);
+INSERT 0 1
+skypro=# SELECT * FROM employee;
+ id | first_name | last_name | gender | age
+----+------------+-----------+--------+-----
+  3 | Eva        | Green     | female |  22
+  1 | Kris       | Los       | female |  18
+  4 | Lina       | Zvereva   | female |  19
+  5 | Roman      | Petrov    | male   |  58
+  6 | leo        | Dicaprio  | male   |  47
+(5 строк)
+
+
+skypro=# SELECT first_name AS Имя FROM employee GROUP BY Имя;
+  Имя
+-------
+ Kris
+ Roman
+ Lina
+ leo
+ Eva
+(5 строк)
+
+
+skypro=# SELECT last_name AS Фамилия FROM employee GROUP BY Фамилия;
+ Фамилия
+----------
+ Dicaprio
+ Zvereva
+ Petrov
+ Los
+ Green
+(5 строк)
+
+
+skypro=# SELECT * FROM employee WHERE age < 30 OR age > 50;
+ id | first_name | last_name | gender | age
+----+------------+-----------+--------+-----
+  3 | Eva        | Green     | female |  22
+  1 | Kris       | Los       | female |  18
+  4 | Lina       | Zvereva   | female |  19
+  5 | Roman      | Petrov    | male   |  58
+(4 строки)
+
+
+skypro=# SELECT * FROM employee WHERE age BETWEEN 30 AND 50;
+ id | first_name | last_name | gender | age
+----+------------+-----------+--------+-----
+  6 | leo        | Dicaprio  | male   |  47
+(1 строка)
+
+
+skypro=# SELECT * FROM employee ORDER BY last_name DESC;
+ id | first_name | last_name | gender | age
+----+------------+-----------+--------+-----
+  4 | Lina       | Zvereva   | female |  19
+  5 | Roman      | Petrov    | male   |  58
+  1 | Kris       | Los       | female |  18
+  3 | Eva        | Green     | female |  22
+  6 | leo        | Dicaprio  | male   |  47
+(5 строк)
+
+
+skypro=# SELECT * FROM employee WHERE first_name LIKE '____%';
+ id | first_name | last_name | gender | age
+----+------------+-----------+--------+-----
+  1 | Kris       | Los       | female |  18
+  4 | Lina       | Zvereva   | female |  19
+  5 | Roman      | Petrov    | male   |  58
+(3 строки)
+
+
+skypro=# UPDATE employee SET first_name = 'Roman' WHERE id = 6;
+UPDATE 1
+skypro=# UPDATE employee SET first_name = 'Lina' WHERE id = 1;
+UPDATE 1
+skypro=# SELECT * FROM employee;
+ id | first_name | last_name | gender | age
+----+------------+-----------+--------+-----
+  3 | Eva        | Green     | female |  22
+  4 | Lina       | Zvereva   | female |  19
+  5 | Roman      | Petrov    | male   |  58
+  6 | Roman      | Dicaprio  | male   |  47
+  1 | Lina       | Los       | female |  18
+(5 строк)
+
+
+skypro=# SELECT first_name AS Имя,
+skypro-# SUM(age) AS Суммарный_возраст
+skypro-# FROM employee GROUP BY Имя;
+  Имя  | Суммарный_возраст
+-------+-------------------
+ Roman |               105
+ Lina  |                37
+ Eva   |                22
+(3 строки)
+
+
+skypro=# SELECT first_name AS Имя,
+skypro-# MIN(age) AS Самый_юный_возраст
+skypro-# FROM employee GROUP BY Имя;
+  Имя  | Самый_юный_возраст
+-------+--------------------
+ Roman |                 47
+ Lina  |                 18
+ Eva   |                 22
+(3 строки)
+
+
+skypro=# SELECT first_name AS Имя,
+skypro-# MAX(age) AS Максимальный_возраст
+skypro-# FROM employee
+skypro-# GROUP BY Имя
+skypro-# HAVING count(first_name) > 1
+skypro-# ORDER BY Максимальный_возраст;
+  Имя  | Максимальный_возраст
+-------+----------------------
+ Lina  |                   19
+ Roman |                   58
+(2 строки)
+
+
+skypro=# SELECT * FROM employee;
+ id | first_name | last_name | gender | age
+----+------------+-----------+--------+-----
+  3 | Eva        | Green     | female |  22
+  4 | Lina       | Zvereva   | female |  19
+  5 | Roman      | Petrov    | male   |  58
+  6 | Roman      | Dicaprio  | male   |  47
+  1 | Lina       | Los       | female |  18
+(5 строк)
+
+skypro=# CREATE TABLE city(
+skypro(# city_id BIGSERIAL NOT NULL PRIMARY KEY,
+skypro(# city_name VARCHAR(50)
+skypro(# );
+CREATE TABLE
+skypro=# ALTER TABLE employee ADD COLUMN city_id INT;
+ALTER TABLE
+skypro=# INSERT INTO city (city_name) VALUES ('Saratov');
+INSERT 0 1
+skypro=# INSERT INTO city (city_name) VALUES ('Moscow');
+INSERT 0 1
+skypro=# INSERT INTO city (city_name) VALUES ('Sochi');
+INSERT 0 1
+skypro=# INSERT INTO city (city_name) VALUES ('SPb');
+INSERT 0 1
+skypro=# INSERT INTO city (city_name) VALUES ('Anapa');
+INSERT 0 1
+skypro=# INSERT INTO city (city_name) VALUES ('Pugachev');
+INSERT 0 1
+skypro=# SELECT * FROM city;
+ city_id | city_name
+---------+-----------
+       1 | Saratov
+       2 | Moscow
+       3 | Sochi
+       4 | SPb
+       5 | Anapa
+       6 | Pugachev
+(6 строк)
+
+
+skypro=# ALTER TABLE employee ADD FOREIGN KEY (city_id) REFERENCES city(city_id);
+ALTER TABLE
+skypro=# SELECT * FROM employee;
+ id | first_name | last_name | gender | age | city_id
+----+------------+-----------+--------+-----+---------
+  3 | Eva        | Green     | female |  22 |
+  4 | Lina       | Zvereva   | female |  19 |
+  5 | Roman      | Petrov    | male   |  58 |
+  6 | Roman      | Dicaprio  | male   |  47 |
+  1 | Lina       | Los       | female |  18 |
+(5 строк)
+
+
+skypro=# UPDATE employee SET city_id = 1 WHERE id = 1;
+UPDATE 1
+skypro=# UPDATE employee SET city_id = 3 WHERE id = 3;
+UPDATE 1
+skypro=# UPDATE employee SET city_id = 2 WHERE id = 4;
+UPDATE 1
+skypro=# UPDATE employee SET city_id = 4 WHERE id = 5;
+UPDATE 1
+skypro=# UPDATE employee SET city_id = 5 WHERE id = 6;
+UPDATE 1
+skypro=# SELECT * FROM employee;
+ id | first_name | last_name | gender | age | city_id
+----+------------+-----------+--------+-----+---------
+  1 | Lina       | Los       | female |  18 |       1
+  3 | Eva        | Green     | female |  22 |       3
+  4 | Lina       | Zvereva   | female |  19 |       2
+  5 | Roman      | Petrov    | male   |  58 |       4
+  6 | Roman      | Dicaprio  | male   |  47 |       5
+(5 строк)
+
+
+skypro=# SELECT employee.first_name, employee.last_name, city.city_name
+skypro-# FROM employee
+skypro-# JOIN city
+skypro-# ON employee.city_id = city.city_id;
+ first_name | last_name | city_name
+------------+-----------+-----------
+ Lina       | Los       | Saratov
+ Eva        | Green     | Sochi
+ Lina       | Zvereva   | Moscow
+ Roman      | Petrov    | SPb
+ Roman      | Dicaprio  | Anapa
+(5 строк)
+
+
+skypro=# SELECT city.city_name, employee.first_name, employee.last_name
+skypro-# FROM employee RIGHT JOIN city
+skypro-# ON employee.city_id = city.city_id;
+ city_name | first_name | last_name
+-----------+------------+-----------
+ Saratov   | Lina       | Los
+ Sochi     | Eva        | Green
+ Moscow    | Lina       | Zvereva
+ SPb       | Roman      | Petrov
+ Anapa     | Roman      | Dicaprio
+ Pugachev  |            |
+(6 строк)
+
+
+skypro=# SELECT employee.first_name, city.city_name
+skypro-# FROM employee FULL OUTER JOIN city
+skypro-# ON employee.city_id = city.city_id;
+ first_name | city_name
+------------+-----------
+ Lina       | Saratov
+ Eva        | Sochi
+ Lina       | Moscow
+ Roman      | SPb
+ Roman      | Anapa
+            | Pugachev
+(6 строк)
+
+
+skypro=# SELECT employee.first_name, city.city_name
+skypro-# FROM employee CROSS JOIN city;
+ first_name | city_name
+------------+-----------
+ Lina       | Saratov
+ Eva        | Saratov
+ Lina       | Saratov
+ Roman      | Saratov
+ Roman      | Saratov
+ Lina       | Moscow
+ Eva        | Moscow
+ Lina       | Moscow
+ Roman      | Moscow
+ Roman      | Moscow
+ Lina       | Sochi
+ Eva        | Sochi
+ Lina       | Sochi
+ Roman      | Sochi
+ Roman      | Sochi
+ Lina       | SPb
+ Eva        | SPb
+ Lina       | SPb
+ Roman      | SPb
+ Roman      | SPb
+ Lina       | Anapa
+ Eva        | Anapa
+-- Далее  --
+
